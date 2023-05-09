@@ -1,0 +1,27 @@
+.textBox{
+    @apply justify-center w-full border-b-2 border-slate-500 bg-transparent my-2 
+    outline-none text-slate-300 pb-1 ;
+}
+
+.textBox2{
+    @apply justify-center w-1/2 border-b-2 border-slate-500 bg-transparent my-2 
+    outline-none text-slate-300 pb-1 ;
+}
+
+
+.input.input_error,
+select.input_error {
+    @apply justify-center w-3/4 border-b-2 border-red-500 bg-transparent my-2 
+    outline-none text-slate-400 pb-2;
+}
+
+.details_line{
+    @apply flex my-4 justify-start md:ml-4 ml-2 items-center;
+}
+.detail_lable{
+    @apply md:text-lg text-base mx-2 text-slate-400;
+}
+
+.user_detail{
+    @apply md:text-base text-sm mx-2 ;
+}

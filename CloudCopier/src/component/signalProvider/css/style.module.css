@@ -1,0 +1,6 @@
+.tabs{
+    @apply inline-block p-4 items-center hover:bg-gray-100 md:dark:bg-gray-800 dark:hover:bg-gray-700 ;
+}
+.tabs_active{
+    @apply inline-block p-4 items-center text-blue-500 text-base animate-bounce;
+}

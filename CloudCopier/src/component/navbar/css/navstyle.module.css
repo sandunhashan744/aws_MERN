@@ -1,0 +1,18 @@
+.test{
+    @apply hidden md:flex text-gray-200 items-center cursor-pointer;
+}
+
+.link{
+    @apply mx-5 md:text-base text-2xl py-5 md:py-0 hover:scale-110;
+}
+.link_active{
+    @apply mx-5 md:text-base text-2xl py-5 md:py-0 text-blue-100 animate-pulse capitalize ;
+    
+    padding-bottom: 3px;
+    border-bottom: 3px solid rgb(184, 215, 253);
+        
+}
+/* user Icon */
+.user{
+    @apply rounded-full w-10 h-10 border border-slate-400;
+}

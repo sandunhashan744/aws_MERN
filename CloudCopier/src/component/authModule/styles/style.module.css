@@ -1,0 +1,23 @@
+.textBox{
+    @apply justify-center w-3/4 border-b-2 border-slate-500 bg-transparent my-2 
+    outline-none text-slate-400 pb-2;
+}
+
+.btn{
+    @apply flex items-center border-2 border-blue-600 px-8 py-2 text-slate-100 cursor-pointer
+    mt-8 rounded-3xl shadow-md shadow-blue-700 animate-pulse w-5/6 justify-center;
+}
+
+.error_msg{
+    @apply text-sm font-extralight text-center text-red-600 my-1;
+}
+
+input.input_error,
+select.input_error {
+    @apply justify-center w-3/4 border-b-2 border-red-500 bg-transparent my-2 
+    outline-none text-slate-400 pb-2;
+}
+
+.reg_err_handle{
+    @apply grid grid-cols-1 justify-items-center;
+}
