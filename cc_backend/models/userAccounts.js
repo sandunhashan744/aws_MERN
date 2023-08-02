@@ -12,6 +12,9 @@ export const userAccountSchema = new mongoose.Schema({
     },
     channelName : {
         type : String,          
+    },
+    logo : {
+        type : String 
     }
 });
 

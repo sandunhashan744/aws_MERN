@@ -1,4 +1,5 @@
-import UserModel from "../models/Usermodel.js";
+import UserModel from '../models/Usermodel.js';
+import Roles from '../models/Roles.js';
 import bcypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import otpGenerate from 'otp-generator';
@@ -9,9 +10,9 @@ dotenv.config()
 export async function verifyUser(req,res,next){
     try {
         const {email} =  req.method == "GET" ? req.query : req.body;
-        
+
         //check the user
-        let exist = await UserModel.findOne({email});
+        let exist = await UserModel.findOne({email});  
         
         if(!exist) return res.status(404).send({error:"Can't Find the User...!"});
         next();
@@ -26,8 +27,10 @@ export async function verifyUser(req,res,next){
 export async function register(req, res){
    // console.log(req.body)
     try {
-        const {firstName, lastName, telegram, email, password } = req.body;
+        const {firstName, lastName, telegram, email, password, userRole} = req.body;
         const profile = ''
+
+        //console.log(userRole);
 
         //check the Telegram
         const ExitTelegram = new Promise((resolve, reject) => {
@@ -60,7 +63,8 @@ export async function register(req, res){
                         telegram, 
                         email,
                         password: hashedPassword,
-                        profile: profile || ''
+                        profile: profile || '',
+                        userRoles: userRole
                     });
                     
                     // save
@@ -96,11 +100,10 @@ export async function login(req, res){
                 if(!passwordchk) return res.status(400).send({error: 'Dont have a Password'});
 
                 //jwt token
-                const token = jwt.sign({
+                const token = jwt.sign({    
                                 userId: user._id,
                                 username: user.email
                             }, process.env.JWT_TOKEN, {expiresIn:"12h"});
-
                                       
                 return res.status(200).send({
                     msg:'Login Successfully...!',
@@ -127,28 +130,60 @@ export async function getUser(req, res){
 
     const {email} = req.params;
 
-    try {
-        if(!email) return res.status(501).send({error: "Invalied email"});
+    // try {
+    //     if(!email) return res.status(501).send({error: "Invalied email"});
        
-        UserModel.findOne({ email }, function(err, user){
+    //     UserModel.findOne({ email }, function(err, user){
 
-            if(err) return res.status(500).send({err});
+    //         if(err) return res.status(500).send({err});
             
-            if(!user) return res.status(501).send({ err:"Couldn't find the user" });
+    //        // if(!user) return res.status(501).send({ err:"Couldn't find the user" });
 
-            return res.status(201).send(user);
-        })
+    //         // console.log(user.userRoles)
+    //         // return res.status(201).send(user);
+    //     })
 
-    } catch (error) {
-        return res.status(404).send({error:"The user can't find"})
+    // } catch (error) {
+    //     return res.status(404).send({error:"The user can't find"})
+    // }
+
+    
+    try {
+        if (!email) {
+            return res.status(501).send({ error: "Invalid email" });
+        }
+    
+        const user = await UserModel.findOne({ email });
+    
+        if (user) {
+            const role = user.userRoles;
+            const perm = await Roles.findOne({ roleId: role });
+    
+            user.permissions = perm.permission
+            
+            const data = {
+                ...user.toObject(),
+                permissions: user.permissions,
+            };
+
+           // console.log(data)            
+            return res.status(201).send(data);
+
+        } else {
+            return res.status(501).send({ err: "Couldn't find the user" });
+        }
+    } catch (err) {
+        console.error("Error occurred:", err);
+        return res.status(500).send({ error: "Something went wrong, please try again later" });
     }
+    
 }
 
 // generate OTP
 export async function generateOTP(req, res){
     req.app.locals.OTP = otpGenerate.generate(6, {lowerCaseAlphabets:false, upperCaseAlphabets:false, specialChars:false})
     res.status(201).send({code: req.app.locals.OTP})
-    console.log('code')
+    //console.log('code')
 }
 
 // verify OTP
@@ -201,36 +236,26 @@ export async function updateUser(req, res){
 
 // reset password
 export async function resetpassword(req, res){
+   
     try {
-
-       // if(req.app.locals.resetSession) return res.status(404).send({err:"Session Expired..!"});
-      
-        const {username, password} = req.body;
-
-        try {
-            UserModel.findOne({username})
-            .then(user => {
-                bcypt.hash(password,10)
-                .then(hashedPass => {
-                    UserModel.updateOne({username : user.username},
-                        {password : hashedPass}, function(err, data){
-                            if(err) throw err;
-                            return res.status(201).send({msg: "Record Update Success..!"})
-                        })
-                })
-                .catch(e =>{
-                    return res.status({error: "Enable to Hashed Password"})
-                })
-
-            })
-            .catch(err =>{
-                return res.status(404).send({err:"Username Not Founded..!"})
-            })
-        } catch (error) {
-            return res.status(500).send({error})
+        const { email, password } = req.body;
+    
+        const hashedPassword = await bcypt.hash(password, 10);
+    
+        const result = await UserModel.updateOne(
+            { email }, // Find user with email
+            { password: hashedPassword }  // Update user's password
+          );
+    
+        if (result.nModified === 0) {
+          return res.status(404).send({ error: "Username Not Found..!" });
         }
+    
+        return res.status(200).send({ msg: "Password Update Success..!" });
+    
+      } catch (error) {
+        console.error(error);
+        return res.status(500).send({ error: "Server Error" });
+      }
 
-    } catch (error) {
-        return res.status(404).send({error});
-    }
 }

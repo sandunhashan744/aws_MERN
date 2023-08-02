@@ -9,6 +9,6 @@ export const loginSchema = Yup.object().shape({
 
     password: Yup.string()
         .min(5)
-        .matches(passwordRules, { message: "Please create a stronger password" })
+        .matches(passwordRules, { message: "Should be include at least One Capital letter,simple letter, number and symbol" })
         .required('Should be Required..!😡')
 });

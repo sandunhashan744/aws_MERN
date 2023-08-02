@@ -1,5 +1,5 @@
 .textBox{
-    @apply justify-center w-3/4 border-b-2 border-slate-500 bg-transparent my-2 
+    @apply justify-center  border-b-2 border-slate-500 bg-transparent my-2 
     outline-none text-slate-400 pb-2;
 }
 
@@ -9,7 +9,7 @@
 }
 
 .error_msg{
-    @apply text-sm font-extralight text-center text-red-600 my-1;
+    @apply text-sm font-extralight text-center text-red-600 my-1 w-64;
 }
 
 input.input_error,

@@ -33,7 +33,7 @@ export const UserSchema = new mongoose.Schema({
     },
     userRoles : {
         type : Number,
-        default : 1
+        //default : 1
     }
 });
 

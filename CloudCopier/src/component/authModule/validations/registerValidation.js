@@ -20,7 +20,7 @@ export const registerSchema = Yup.object().shape({
 
     password: Yup.string()
         .min(5)
-        .matches(passwordRules, { message: "Please create a stronger password" })
+        .matches(passwordRules, { message: "It should be include at least One Capital letter,simple letter, number and symbol" })
         .required('Should be Required..!😡'),
 
     confirm_password: Yup.string()

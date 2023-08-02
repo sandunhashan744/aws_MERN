@@ -2,12 +2,21 @@ import React,{useEffect, useState} from 'react'
 import Hero from '../hero/hero';
 import Channels from '../signalProvider/Channel';
 import { AiOutlineSearch } from 'react-icons/ai';
+import  AppBar from './appBar';
+
+//MUI
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+
+//page loading
+import ClockLoader  from "react-spinners/ClockLoader";
+
 
 //import the axios function
 import { getChannels } from '../authModule/helper/helper'
 
-//page loading
-import ClockLoader  from "react-spinners/ClockLoader";
+//number of cards in the page
+const PageSize = 8;
 
 const HomeScreen = () => {
 
@@ -16,8 +25,26 @@ const HomeScreen = () => {
   const [originalData, setOriginalData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // paginaton
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(originalData.length / PageSize);
+  const startIndex = (currentPage - 1) * PageSize;
+  const endIndex = Math.min(startIndex + PageSize, originalData.length);
+
+  //Next and previous
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
   useEffect(() => {
-    //localStorage.clear('token');
     async function fetchData() {
       try {
         const response = await getChannels();
@@ -33,6 +60,7 @@ const HomeScreen = () => {
     fetchData();
   }, []);
 
+  //search the 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -46,44 +74,69 @@ const HomeScreen = () => {
 
   return (
     <>
+    <AppBar />
     <Hero />
 
+{/* wavy line */}
     <div className='w-full md:h-full px-4 pb-2 pt-1 md:px-28 bg-transparent '>
-      <div className='bg-slate-900 rounded-2xl px-5 my-5 justify-items-end'>    
+      <div className='bg-transparent rounded-2xl px-5 my-5 justify-items-end'>    
         <div className='py-3 md:py-5 md:my-3 '>
-          <h1 className='text-slate-300  px-1 py-1 md:text-xl text-base md:font-bold'>Signal Channels</h1>
           {/* search */}
           <div className='flex items-center justify-end md:pt-0 pb-5 px-1'>
-              <input 
-              className='bg-transparent border-b-2 p-1 outline-none animate-pulse
-               text-slate-300 w-3/5 md:w-1/4 text-sm md:text-base' 
+            <input 
+              className='bg-transparent border-b-2 p-1 outline-none animate-none
+               text-black w-3/5 md:w-1/4 text-sm md:text-base' 
               placeholder="Search Channels" 
               value={searchTerm}
               onChange={handleSearch}
-              />
-              <AiOutlineSearch size={20}  className='absolute text-slate-400 mr-2' />
+            />
+            <AiOutlineSearch size={20}  className='absolute text-black mr-2' />
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-4 gap-6 py-4 px-1 '>
+          <div className='grid grid-cols-1 md:grid-cols-4 gap-8 py-4 px-1 '>
             
             {isLoading ? (
-                  <div className='loading'>
-                  <ClockLoader color="#aeddd4" />
-                  </div>
+              <div className='loading '>
+                {/* <ClockLoader color="#aeddd4" /> */}
+              </div>
               ) : (
-                getData.map((chanels) => (
+                getData.slice(startIndex, endIndex).map((chanels) => (
                   <div key={chanels._id}>
                       <Channels channel={chanels} />
                   </div>
-                  ))
+                  )
+                )
               )
             }
-
-          </div>  
+          </div> 
+          
+          <div className="flex justify-end mt-5 ">
+            <div className="pagination ">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className={`px-1 py-1 mx-2 cursor-pointer rounded-md ${
+                  currentPage === 1 ? 'bg-gray-400' : 'bg-blue-500'
+                }`}
+              >
+                <NavigateBeforeIcon />
+              </button>
+              <span className="px-2 py-2">{`${currentPage} / ${totalPages}`}</span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className={`px-1 py-1 cursor-pointer rounded-md ${
+                  currentPage === totalPages ? 'bg-gray-400' : 'bg-blue-500'
+                }`}
+              >
+                <NavigateNextIcon /> 
+              </button>
+            </div>
+          </div> 
+          
         </div>
       </div>
     </div>
-
     </>
   )
 }

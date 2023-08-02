@@ -8,7 +8,6 @@
     outline-none text-slate-300 pb-1 ;
 }
 
-
 .input.input_error,
 select.input_error {
     @apply justify-center w-3/4 border-b-2 border-red-500 bg-transparent my-2 
@@ -24,4 +23,16 @@ select.input_error {
 
 .user_detail{
     @apply md:text-base text-sm mx-2 ;
+}
+
+.test{
+    @apply hidden md:flex text-black items-center cursor-pointer;
+}
+.link{
+    @apply mx-5 md:text-base text-xl py-5 md:py-0 hover:scale-110;
+}
+.link_active{
+    @apply mx-5 md:text-base text-xl py-5 md:py-0 text-black font-semibold capitalize ;
+    padding-bottom: 3px;
+    border-bottom: 3px solid rgb(15, 118, 245);       
 }

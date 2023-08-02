@@ -7,15 +7,6 @@ import Footer from "./component/footer/footer";
 
 //home
 import HomeScreen from './component/home/HomeScreen';
-//signal Provider
-import SignalProviders from "./component/signalProvider/signalProviders";
-import DetailsView from './component/signalProvider/details/DetailsView';
-//subscriber
-import Subscribers from './component/subscriber/Subscribers';
-//chanals
-import Chanals from './component/chanal/Chanals';
-//review
-// import Testimonial from './component/testimonial/Testimonial';
 
 // ** loarding **
 import PropagateLoader from "react-spinners/PropagateLoader";
@@ -25,13 +16,28 @@ import Login from './component/authModule/Login'
 import Register from './component/authModule/Register';
 import OTPVerify from './component/authModule/OTPVerify';
 import Reset from './component/authModule/Reset';
-import Profile from './component/subscriber/profile/Profile';
 
 // auth middleware 
 import { AuthorizeUser } from './component/authModule/middleware/auth-route';
 
-//signalProvider
-import ProviderProfile from './component/signalProvider/profile/ProviderProfile';
+//provider
+import Provider from './component/signalProvider/Provider'
+import Subscriber from './component/subscriber/Subscriber';
+
+//Subscriber
+import SubscriberSetUp from './component/subscriber/Setup';
+import ProviderSetUp from './component/signalProvider/Setup';
+import MyChannels from './component/subscriber/profile/MyChannels';
+
+// Administrator
+import Administrator from './component/administrator/Administrator'
+
+//super-user
+import SuperUser from './component/superUser/SuperUser';
+
+// ************************ Permission *******************
+import {isAllowed} from './component/permManager/ManagePerm'
+//---------------------------------------------------------
 
 function App() {
 
@@ -50,7 +56,7 @@ useEffect(() => {
     <div>
     {loading ? (
       <div className='loading'>      
-        <PropagateLoader color="#aeddd4" />
+        <PropagateLoader color="black" />
       </div>    
     ):(
       <BrowserRouter>
@@ -58,24 +64,35 @@ useEffect(() => {
       {/* <NavBar/> */}
         <Routes>
           <Route path = '/' element = { <HomeScreen /> } />
-          <Route path = '/provider' element = { <SignalProviders /> } />
-          <Route path = '/provider/1' element = { <DetailsView /> } /> 
-          <Route path = '/subscriber' element = { <Subscribers /> } />   
-          <Route path = '/chanal' element = { <Chanals /> } />
 
           {/* Auth routes */}
           <Route path = '/login' element = { <Login /> } />
           <Route path = '/register' element = { <Register /> } />
           <Route path = '/get-otp' element = { <OTPVerify /> } />
           <Route path = '/reset' element = { <Reset /> } />
-          
-          {/* Profile */}
-          <Route path = '/profile' element = { <AuthorizeUser> <Profile /> </AuthorizeUser> } />
-          <Route path = '/provider-profile' element = { <AuthorizeUser> <ProviderProfile /> </AuthorizeUser> } />
 
-          {/* secure */}
-          <Route path = '/provider/id' element = {<AuthorizeUser> <DetailsView /> </AuthorizeUser> } />
-      
+          {/* Povider/master */}
+          <Route path = '/provider' 
+          element = { <AuthorizeUser allowedRoles={['2','22']}> 
+            <Provider showCreate={isAllowed('CHANNEL_CREATE')} channelDelete={isAllowed('CHANNEL_DELETE')} /> 
+          </AuthorizeUser> } />  
+
+          <Route path = '/provider-setup' element = { <AuthorizeUser allowedRoles={['2','22']}> <ProviderSetUp /> </AuthorizeUser> } />
+          
+          {/* Subscriber/ */}          
+          <Route path = '/subscriber' element = { <AuthorizeUser allowedRoles={['1']}> <Subscriber /> </AuthorizeUser> } />
+          <Route path = '/my-channels' element = { <AuthorizeUser allowedRoles={['1']}> <MyChannels /> </AuthorizeUser> } />
+          <Route path = '/subscriber-setup' element = { <AuthorizeUser allowedRoles={['1']}> <SubscriberSetUp /> </AuthorizeUser> } />
+
+          {/* Administrator */}
+          <Route path = '/admin' 
+          element = {<AuthorizeUser allowedRoles={['3','4','5']}> 
+          <Administrator showDelete={isAllowed('USER_DELETE')} /> 
+          </AuthorizeUser>} />
+
+           {/* Super User  */}
+           <Route path = '/superUser' element = {<AuthorizeUser allowedRoles={['4']}><SuperUser /></AuthorizeUser>  } />
+
         </Routes>
         <Footer />
       </BrowserRouter>

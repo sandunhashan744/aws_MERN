@@ -4,3 +4,28 @@
 .tabs_active{
     @apply inline-block p-4 items-center text-blue-500 text-base animate-bounce;
 }
+
+.test{
+    @apply hidden md:flex text-black items-center cursor-pointer;
+}
+
+.link{
+    @apply mx-5 md:text-base text-xl py-5 md:py-0 hover:scale-110;
+}
+.link_active{
+    @apply mx-5 md:text-base text-xl py-5 md:py-0 text-black font-semibold capitalize ;
+    padding-bottom: 3px;
+    border-bottom: 3px solid rgb(15, 148, 245);       
+}
+
+/* how to setUp */
+.sublist{
+    list-style-type: circle;
+    margin-left: 10%;
+    /* margin-top: 0.5em;
+    margin-bottom: 0.5em; */
+}
+.sublist li {
+    list-style-type: square;
+
+  }

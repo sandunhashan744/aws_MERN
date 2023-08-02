@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import avatar from '../../../assets/img/user.png';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { RxUpdate } from 'react-icons/rx';
-import { RxCross2 } from 'react-icons/rx';
+// import { RxCross2 } from 'react-icons/rx';
 import styles from '../styles/style.module.css';
 
 // new
@@ -15,7 +15,9 @@ import {updateUser} from '../../authModule/helper/helper';
 
 import ClockLoader  from "react-spinners/ClockLoader";
 
-const UserDetails = () => {
+// const UserDetails = ({getBack}) => {
+  
+  const UserDetails = () => {
     
   const navigate = useNavigate();
   
@@ -29,9 +31,9 @@ const UserDetails = () => {
   }
 
   // back to page
-  const backtoPage = () => {
-    navigate('/')
-  }
+  // const backtoPage = () => {
+  //   getBack()
+  // }
 
   // for image upload
   const onUpload = async e =>{
@@ -75,11 +77,11 @@ const UserDetails = () => {
       <Toaster position='top-center' reverseOrder={false} />
 
         {/** this is the edit profile **/}
-        <div className=' bg-transparent p-5 rounded-xl shadow-md shadow-sky-900 relative'>
+        <div className=' bg-slate-900 p-5 rounded-xl shadow-md shadow-sky-900 relative'>
           
-          <>
+          {/* <>
             <RxCross2  className= 'text-white text-3xl float-right cursor-pointer' onClick={backtoPage}/> 
-          </>
+          </> */}
           
           {/* profile pic */}
           <div className='flex justify-center items-center'>

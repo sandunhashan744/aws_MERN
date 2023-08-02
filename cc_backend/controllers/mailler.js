@@ -16,13 +16,14 @@ let transporter = nodemailer.createTransport(nodeConfig);
 let MailGenerator = new Mailgen({
     theme: "default",
     product:{
-        name:"- Sh - Software Solutions",
+        name:"Cloud Copier",
         link:'https://mailgen.js/'
     }
 });
 
 export const registerMail = async(req, res) => {
     const {username, email, text, subject} = req.body;
+
     var e_mail = {
         body : {
             name: username,
